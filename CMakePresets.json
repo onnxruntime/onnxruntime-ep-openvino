@@ -1,0 +1,90 @@
+{
+    "version": 2,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28
+    },
+
+    "configurePresets": [
+        {
+            "name": "windows-x64",
+            "displayName": "Base configure preset for windows 64 bit builds",
+            "description": "Sets cache variables, binary dir and install prefix",
+            "generator": "Visual Studio 17 2022",
+            "architecture": {
+                "value": "x64"
+            },
+            "binaryDir": "${sourceDir}/build/windows",
+            "cacheVariables": {
+                "CMAKE_GENERATOR_PLATFORM": "x64",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/bin/windows",
+                "CMAKE_CONFIGURATION_TYPES": "Release;RelWithDebInfo;Debug",
+                "CMAKE_C_COMPILER": "$env{VCToolsInstallDir}/bin/Hostx64/x64/cl.exe",
+                "CMAKE_CXX_COMPILER": "$env{VCToolsInstallDir}/bin/Hostx64/x64/cl.exe"
+            }
+        },
+        {
+            "name": "linux-x64-release",
+            "displayName": "Base configure preset for Linux 64 bit builds",
+            "description": "Sets cache variables, binary dir and install prefix",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/bin/linux",
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
+            "name": "linux-x64-debug",
+            "displayName": "Linux 64-bit Debug build",
+            "inherits": "linux-x64-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "linux-x64-relwithdebinfo",
+            "displayName": "Linux 64-bit RelWithDebInfo build",
+            "inherits": "linux-x64-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "windows-x64",
+            "displayName": "Build preset for local windows 64-bit build",
+            "configurePreset": "windows-x64",
+            "inheritConfigureEnvironment": true,
+            "targets": [ "install" ],
+            "cleanFirst": true
+        },
+        {
+            "name": "linux-x64-release",
+            "displayName": "Build preset for local Linux 64-bit build",
+            "configurePreset": "linux-x64-release",
+            "inheritConfigureEnvironment": true,
+            "targets": [ "install" ],
+            "cleanFirst": true
+        },
+        {
+            "name": "linux-x64-debug",
+            "displayName": "Build preset for Linux 64-bit Debug build",
+            "configurePreset": "linux-x64-debug",
+            "inheritConfigureEnvironment": true,
+            "targets": [ "install" ],
+            "cleanFirst": true
+        },
+        {
+            "name": "linux-x64-relwithdebinfo",
+            "displayName": "Build preset for Linux 64-bit RelWithDebInfo build",
+            "configurePreset": "linux-x64-relwithdebinfo",
+            "inheritConfigureEnvironment": true,
+            "targets": [ "install" ],
+            "cleanFirst": true
+        }
+    ]
+}

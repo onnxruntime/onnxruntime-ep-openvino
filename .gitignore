@@ -1,0 +1,22 @@
+build/
+bin/
+obj/
+runtimes/
+local_feed/
+.vscode/
+.vs/
+.claude/
+.codex/
+CMakeUserPresets.json
+_codeql_detected_source_root
+
+# Python build artifacts
+*.egg-info/
+dist/
+*.pyc
+__pycache__/
+.pytest_cache/
+venv/
+
+# CMake-generated files
+packaging/python/pyproject.toml

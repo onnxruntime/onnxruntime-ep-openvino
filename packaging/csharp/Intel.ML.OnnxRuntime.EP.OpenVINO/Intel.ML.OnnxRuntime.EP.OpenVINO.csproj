@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!-- Package info -->
+    <PackageId>Intel.ML.OnnxRuntime.EP.OpenVINO</PackageId>
+    <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\..\..\VERSION_NUMBER').Trim())</Version>
+    <Authors>Intel Corporation</Authors>
+    <Company>Intel Corporation</Company>
+    <Description>OpenVINO™ Execution Provider plugin for ONNX Runtime. Enables hardware-accelerated inference on Intel® CPUs, GPUs, and NPUs.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>onnxruntime;openvino;execution-provider;inference;intel;ai</PackageTags>
+
+    <!-- License/Repository -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <!-- Windows x64: EP DLL, OpenVINO runtime DLLs, TBB DLLs, device cache. -->
+  <ItemGroup Condition="Exists('runtimes\win-x64\native')">
+    <None Include="runtimes\win-x64\native\*"
+          Pack="true"
+          PackagePath="runtimes/win-x64/native/"
+          CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+  <!-- Linux x64: EP .so, OpenVINO runtime .so libs, TBB, hwloc, device cache. -->
+  <ItemGroup Condition="Exists('runtimes/linux-x64/native')">
+    <None Include="runtimes/linux-x64/native/*"
+          Pack="true"
+          PackagePath="runtimes/linux-x64/native/"
+          CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+  <!-- OvepIsProduction is set by CMake from -DOVEP_PLUGIN_PRODUCTION_BUILD=ON.
+       false (default): <VERSION_NUMBER>-dev.<commit>
+       true:            <VERSION_NUMBER> -->
+  <PropertyGroup>
+    <OvepIsProduction Condition="'$(OvepIsProduction)' == ''">false</OvepIsProduction>
+  </PropertyGroup>
+
+  <!-- OvepGitCommitId can be passed from CMake via -p:OvepGitCommitId=<hash>.
+       If not provided, the version suffix is simply "-dev" with no commit hash.
+       OvepBuildMetadata (-p:OvepBuildMetadata=.<type>.<number>) is optional CI
+       build metadata; it is carried in the pre-release segment (NuGet strips
+       SemVer "+" build metadata from package identity) so builds sharing a git
+       commit produce distinct packages, e.g. "-dev.<hash>.ci.4567". -->
+  <Target Name="AppendDevSuffix" BeforeTargets="GenerateNuspec;Pack" Condition="'$(OvepIsProduction)' != 'true'">
+    <PropertyGroup>
+      <_CommitId>$(OvepGitCommitId.Trim())</_CommitId>
+      <_BuildMeta>$(OvepBuildMetadata.Trim())</_BuildMeta>
+      <Version Condition="'$(_CommitId)' != ''">$(Version)-dev.$(_CommitId)$(_BuildMeta)</Version>
+      <Version Condition="'$(_CommitId)' == ''">$(Version)-dev$(_BuildMeta)</Version>
+      <!-- PackageVersion is frozen from $(Version) at static evaluation time;
+           reassign it here so GenerateNuspec picks up the dev suffix. -->
+      <PackageVersion>$(Version)</PackageVersion>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CheckNativeRuntimes" BeforeTargets="Build;Pack">
+    <Error Condition="$([MSBuild]::IsOSPlatform('Windows')) And !Exists('runtimes\win-x64\native')"
+           Text="Native runtime files not found. Populate runtimes/win-x64/native/ before building." />
+    <Error Condition="$([MSBuild]::IsOSPlatform('Linux')) And !Exists('runtimes/linux-x64/native')"
+           Text="Native runtime files not found. Populate runtimes/linux-x64/native/ before building." />
+  </Target>
+
+</Project>

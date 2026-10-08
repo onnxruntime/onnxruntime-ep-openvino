@@ -1,0 +1,7 @@
+# Minimal runtime requirements for end users
+# 
+# Note: The onnxruntime-ep-openvino package bundles OpenVINO and TBB libraries.
+# Users only need to install ONNX Runtime separately.
+
+# ONNX Runtime (required for using the plugin)
+onnxruntime>=1.23.0

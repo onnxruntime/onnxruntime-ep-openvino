@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onnxruntime-ep-openvino"
+version = "@PY_WHEEL_VERSION@"
+description = "OpenVINO™ Execution Provider plugin for ONNX Runtime"
+readme = "README_PYPI.md"
+license = {text = "MIT"}
+authors = [
+    {name = "OpenVINO Developers", email = "openvino@intel.com"}
+]
+keywords = ["onnxruntime", "openvino", "execution-provider", "plugin", "inference", "ai", "ml"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14"
+]
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["onnxruntime_ep_openvino"]
+package-dir = {"onnxruntime_ep_openvino" = "onnxruntime_ep_openvino"}
+
+[tool.setuptools.package-data]
+onnxruntime_ep_openvino = [
+    "*.dll",
+    "*.so",
+    "*.so.*",
+    "*.pyd",
+    "*.json",
+    "*.manifest",
+    "third-party-programs.txt",
+]

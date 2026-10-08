@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap15="http://schemas.microsoft.com/appx/manifest/uap/windows10/15"
+  xmlns:uap17="http://schemas.microsoft.com/appx/manifest/uap/windows10/17"
+  IgnorableNamespaces="uap uap15 uap17">
+
+  <Identity
+    Name="MicrosoftCorporationII.WinML.Intel.OpenVINO.EP.1.8"
+    Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+    Version="1.8.@BUILD_NUMBER@.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Windows ML Runtime OpenVINO™ Execution Provider 1.8</DisplayName>
+    <PublisherDisplayName>Microsoft Corp.</PublisherDisplayName>
+    <Logo>Images\StoreLogo.png</Logo>
+    <uap15:DependencyTarget>true</uap15:DependencyTarget>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22000.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Extensions>
+    <uap17:Extension Category="windows.packageExtension">
+        <uap17:PackageExtension Name="com.microsoft.windowsmlruntime.executionprovider"
+            Id="OpenVINOEP"
+            DisplayName="Windows ML Runtime Intel® OpenVINO™ Execution Provider"
+            PublicFolder="ExecutionProvider"
+            Description="Intel® OpenVINO™ Execution Provider for Windows* ML.">
+            <uap17:Properties>
+              <ProviderName>OpenVINOExecutionProvider</ProviderName>
+              <ProviderPath>onnxruntime_providers_openvino_plugin.dll</ProviderPath>
+            </uap17:Properties>
+        </uap17:PackageExtension>
+      </uap17:Extension>
+  </Extensions>
+
+</Package>
